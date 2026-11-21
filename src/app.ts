@@ -1,12 +1,14 @@
 import express from "express";
 import cors from "cors";
+import { errorHandler } from "./middlewares/errorHandler";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.get("/api/v1/health", (_req, res) => {
+// Endpoint de salud de la API
+const healthHandler = (_req: express.Request, res: express.Response) => {
   res.status(200).json({
     msg: "OK",
     code: 200,
@@ -15,6 +17,21 @@ app.get("/api/v1/health", (_req, res) => {
       status: "running"
     }
   });
+};
+
+app.get("/api/health", healthHandler);
+app.get("/api/v1/health", healthHandler);
+
+// Middleware para rutas inexistentes
+app.use((_req, res) => {
+  res.status(404).json({
+    msg: "Ruta no encontrada",
+    code: 404,
+    data: null
+  });
 });
+
+// Middleware centralizado de errores
+app.use(errorHandler);
 
 export default app;
