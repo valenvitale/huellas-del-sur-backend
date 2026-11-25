@@ -11,7 +11,7 @@ export const animalesMock: Animal[] = [
         sexo: "hembra",
         tamanio: "mediano",
         descripcion: "Perra cariñosa, sociable y muy juguetona.",
-        imagenUrl: "/imagenes/animales/luna.jpg",
+        imagenUrl: "/imagenes/animales/luna.png",
         estado: "disponible",
         fechaCreacion: "2026-11-21T10:00:00Z",
         fechaActualizacion: "2026-11-21T10:00:00Z"
@@ -25,7 +25,7 @@ export const animalesMock: Animal[] = [
         sexo: "macho",
         tamanio: "pequeno",
         descripcion: "Gato tranquilo y acostumbrado a vivir en interiores.",
-        imagenUrl: "/imagenes/animales/simon.jpg",
+        imagenUrl: "/imagenes/animales/simon.png",
         estado: "disponible",
         fechaCreacion: "2026-11-21T11:00:00Z",
         fechaActualizacion: "2026-11-21T11:00:00Z"
@@ -40,7 +40,7 @@ export const animalesMock: Animal[] = [
         sexo: "macho",
         tamanio: "grande",
         descripcion: "Perro activo que disfruta de los paseos al aire libre.",
-        imagenUrl: "/imagenes/animales/rocky.jpg",
+        imagenUrl: "/imagenes/animales/rocky.png",
         estado: "disponible",
         fechaCreacion: "2026-11-21T12:00:00Z",
         fechaActualizacion: "2026-11-21T12:00:00Z"
@@ -54,7 +54,7 @@ export const animalesMock: Animal[] = [
         sexo: "hembra",
         tamanio: "pequeno",
         descripcion: "Gata independiente, tranquila y afectuosa.",
-        imagenUrl: "/imagenes/animales/mora.jpg",
+        imagenUrl: "/imagenes/animales/mora.png",
         estado: "en_proceso",
         fechaCreacion: "2026-11-21T13:00:00Z",
         fechaActualizacion: "2026-11-22T09:00:00Z"
@@ -69,7 +69,7 @@ export const animalesMock: Animal[] = [
         sexo: "macho",
         tamanio: "mediano",
         descripcion: "Perro tranquilo, ideal para compartir en familia.",
-        imagenUrl: "/imagenes/animales/toby.jpg",
+        imagenUrl: "/imagenes/animales/toby.png",
         estado: "adoptado",
         fechaCreacion: "2026-11-21T14:00:00Z",
         fechaActualizacion: "2026-11-23T10:00:00Z"
@@ -83,7 +83,7 @@ export const animalesMock: Animal[] = [
         sexo: "hembra",
         tamanio: "pequeno",
         descripcion: "Cachorra curiosa, enérgica y muy compañera.",
-        imagenUrl: "/imagenes/animales/nina.jpg",
+        imagenUrl: "/imagenes/animales/nina.png",
         estado: "disponible",
         fechaCreacion: "2026-11-22T10:00:00Z",
         fechaActualizacion: "2026-11-22T10:00:00Z"
@@ -97,7 +97,7 @@ export const animalesMock: Animal[] = [
         sexo: "macho",
         tamanio: "mediano",
         descripcion: "Gato sociable que disfruta de la compañía humana.",
-        imagenUrl: "/imagenes/animales/oliver.jpg",
+        imagenUrl: "/imagenes/animales/oliver.png",
         estado: "disponible",
         fechaCreacion: "2026-11-22T11:00:00Z",
         fechaActualizacion: "2026-11-22T11:00:00Z"
@@ -111,7 +111,7 @@ export const animalesMock: Animal[] = [
         sexo: "macho",
         tamanio: "grande",
         descripcion: "Perro adulto, obediente y muy afectuoso.",
-        imagenUrl: "/imagenes/animales/bruno.jpg",
+        imagenUrl: "/imagenes/animales/bruno.png",
         estado: "en_proceso",
         fechaCreacion: "2026-11-22T12:00:00Z",
         fechaActualizacion: "2026-11-23T12:00:00Z"
@@ -125,7 +125,7 @@ export const animalesMock: Animal[] = [
         sexo: "hembra",
         tamanio: "pequeno",
         descripcion: "Gatita juguetona que busca un hogar responsable.",
-        imagenUrl: "/imagenes/animales/mia.jpg",
+        imagenUrl: "/imagenes/animales/mia.png",
         estado: "disponible",
         fechaCreacion: "2026-11-22T13:00:00Z",
         fechaActualizacion: "2026-11-22T13:00:00Z"
@@ -139,7 +139,7 @@ export const animalesMock: Animal[] = [
         sexo: "macho",
         tamanio: "grande",
         descripcion: "Perro sociable con mucha energía.",
-        imagenUrl: "/imagenes/animales/max.jpg",
+        imagenUrl: "/imagenes/animales/max.png",
         estado: "disponible",
         fechaCreacion: "2026-11-23T10:00:00Z",
         fechaActualizacion: "2026-11-23T10:00:00Z"
@@ -153,7 +153,7 @@ export const animalesMock: Animal[] = [
         sexo: "macho",
         tamanio: "mediano",
         descripcion: "Gato adulto que disfruta de los ambientes tranquilos.",
-        imagenUrl: "/imagenes/animales/coco.jpg",
+        imagenUrl: "/imagenes/animales/coco.png",
         estado: "adoptado",
         fechaCreacion: "2026-11-23T11:00:00Z",
         fechaActualizacion: "2026-11-24T10:00:00Z"
@@ -167,7 +167,7 @@ export const animalesMock: Animal[] = [
         sexo: "hembra",
         tamanio: "mediano",
         descripcion: "Perra dulce y compañera que busca una familia.",
-        imagenUrl: "/imagenes/animales/alma.jpg",
+        imagenUrl: "/imagenes/animales/alma.png",
         estado: "disponible",
         fechaCreacion: "2026-11-24T10:00:00Z",
         fechaActualizacion: "2026-11-24T10:00:00Z"
