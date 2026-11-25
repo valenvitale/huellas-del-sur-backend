@@ -20,3 +20,11 @@ export interface Animal {
   fechaCreacion: string;
   fechaActualizacion: string;
 }
+
+export interface AnimalCatalogo extends Animal {
+    refugio: {
+        id: string;
+        nombre: string;
+        localidad: string;
+    } | null;
+}
