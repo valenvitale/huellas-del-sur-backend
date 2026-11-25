@@ -1,7 +1,105 @@
 import { Router, Request, Response } from "express";
 import { animalesMock } from "../mocks/animales.mock";
+import { Animal } from "../types/Animal";
+import { refugiosMock } from "../mocks/refugios.mock";
 
 const router = Router();
+type DatosAnimal = Omit<
+    Animal,
+    "id" | "fechaCreacion" | "fechaActualizacion"
+>;
+
+function validarDatosAnimal(
+    datos: Partial<DatosAnimal>
+): string | null {
+    const {
+        nombre,
+        especie,
+        refugioId,
+        raza,
+        edad,
+        sexo,
+        tamanio,
+        descripcion,
+        imagenUrl,
+        estado
+    } = datos;
+
+    // Validar campos de texto obligatorios
+    const camposObligatorios = {
+        nombre,
+        especie,
+        refugioId,
+        descripcion
+    };
+
+    const datosInvalidos = Object.values(
+        camposObligatorios
+    ).some(
+        (valor) =>
+            typeof valor !== "string" ||
+            valor.trim() === ""
+    );
+
+    if (datosInvalidos) {
+        return "Los campos obligatorios deben estar completos";
+    }
+
+    // Validar edad
+    if (
+        typeof edad !== "number" ||
+        !Number.isFinite(edad) ||
+        edad < 0
+    ) {
+        return "La edad debe ser un número mayor o igual a cero";
+    }
+
+    // Validar sexo
+    if (sexo !== "macho" && sexo !== "hembra") {
+        return "Sexo inválido";
+    }
+
+    // Validar tamaño
+    if (
+        tamanio !== "pequeno" &&
+        tamanio !== "mediano" &&
+        tamanio !== "grande"
+    ) {
+        return "Tamaño inválido";
+    }
+
+    // Validar estado
+    if (
+        estado !== "disponible" &&
+        estado !== "en_proceso" &&
+        estado !== "adoptado"
+    ) {
+        return "Estado de adopción inválido";
+    }
+
+    // Validar campos opcionales
+    if (raza !== undefined && typeof raza !== "string") {
+        return "La raza debe ser una cadena de texto";
+    }
+
+    if (
+        imagenUrl !== undefined &&
+        typeof imagenUrl !== "string"
+    ) {
+        return "La imagen debe ser una cadena de texto";
+    }
+
+    // Validar existencia del refugio
+    const refugioExiste = refugiosMock.some(
+        (refugio) => refugio.id === refugioId
+    );
+
+    if (!refugioExiste) {
+        return "El refugio asociado no existe";
+    }
+
+    return null;
+}
 
 router.get("/", (req: Request, res: Response) => {
     const {
@@ -213,6 +311,175 @@ router.get("/", (req: Request, res: Response) => {
                 totalPages
             }
         }
+    });
+});
+
+// Obtener un animal por ID
+router.get("/:id", (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const animal = animalesMock.find(
+        (animal) => animal.id === id
+    );
+
+    if (!animal) {
+        res.status(404).json({
+            msg: "Animal no encontrado",
+            code: 404,
+            data: null
+        });
+        return;
+    }
+
+    res.status(200).json({
+        msg: "Animal obtenido correctamente",
+        code: 200,
+        data: {
+            animal
+        }
+    });
+});
+
+// Crear un animal
+router.post("/", (req: Request, res: Response) => {
+    const datos = req.body ?? {};
+
+    // Validar los datos recibidos
+    const error = validarDatosAnimal(datos);
+
+    if (error) {
+        res.status(400).json({
+            msg: error,
+            code: 400,
+            data: null
+        });
+        return;
+    }
+
+    // Generar un nuevo ID
+    const nuevoId = String(
+        Math.max(
+            0,
+            ...animalesMock.map((animal) => Number(animal.id))
+        ) + 1
+    );
+
+    const fechaActual = new Date().toISOString();
+
+    // Crear el nuevo animal
+    const nuevoAnimal: Animal = {
+        id: nuevoId,
+        refugioId: datos.refugioId,
+        nombre: datos.nombre.trim(),
+        especie: datos.especie.trim().toLowerCase(),
+        edad: datos.edad,
+        sexo: datos.sexo,
+        tamanio: datos.tamanio,
+        descripcion: datos.descripcion.trim(),
+        estado: datos.estado,
+        fechaCreacion: fechaActual,
+        fechaActualizacion: fechaActual,
+        ...(datos.raza !== undefined && {
+            raza: datos.raza.trim()
+        }),
+        ...(datos.imagenUrl !== undefined && {
+            imagenUrl: datos.imagenUrl.trim()
+        })
+    };
+
+    // Guardar temporalmente en memoria
+    animalesMock.push(nuevoAnimal);
+
+    res.status(201).json({
+        msg: "Animal creado correctamente",
+        code: 201,
+        data: {
+            animal: nuevoAnimal
+        }
+    });
+});
+
+// Actualizar un animal por ID
+router.put("/:id", (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    // Buscar el animal
+    const animal = animalesMock.find(
+        (animal) => animal.id === id
+    );
+
+    if (!animal) {
+        res.status(404).json({
+            msg: "Animal no encontrado",
+            code: 404,
+            data: null
+        });
+        return;
+    }
+
+    const datos = req.body ?? {};
+
+    // Validar los datos recibidos
+    const error = validarDatosAnimal(datos);
+
+    if (error) {
+        res.status(400).json({
+            msg: error,
+            code: 400,
+            data: null
+        });
+        return;
+    }
+
+    // Actualizar los datos en memoria
+    Object.assign(animal, {
+        refugioId: datos.refugioId,
+        nombre: datos.nombre.trim(),
+        especie: datos.especie.trim().toLowerCase(),
+        raza: datos.raza?.trim(),
+        edad: datos.edad,
+        sexo: datos.sexo,
+        tamanio: datos.tamanio,
+        descripcion: datos.descripcion.trim(),
+        imagenUrl: datos.imagenUrl?.trim(),
+        estado: datos.estado,
+        fechaActualizacion: new Date().toISOString()
+    });
+
+    res.status(200).json({
+        msg: "Animal actualizado correctamente",
+        code: 200,
+        data: {
+            animal
+        }
+    });
+});
+
+// Eliminar un animal por ID
+router.delete("/:id", (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    // Buscar el índice del animal
+    const indice = animalesMock.findIndex(
+        (animal) => animal.id === id
+    );
+
+    if (indice === -1) {
+        res.status(404).json({
+            msg: "Animal no encontrado",
+            code: 404,
+            data: null
+        });
+        return;
+    }
+
+    // Eliminar el animal de la memoria
+    animalesMock.splice(indice, 1);
+
+    res.status(200).json({
+        msg: "Animal eliminado correctamente",
+        code: 200,
+        data: null
     });
 });
 
