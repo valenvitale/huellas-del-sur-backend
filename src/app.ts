@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { errorHandler } from "./middlewares/errorHandler";
 import refugiosRoutes from "./routes/refugios.routes";
+import animalesRoutes from "./routes/animales.routes";
 
 const app = express();
 
@@ -23,6 +24,7 @@ const healthHandler = (_req: express.Request, res: express.Response) => {
 app.get("/api/health", healthHandler);
 app.get("/api/v1/health", healthHandler);
 app.use("/api/v1/refugios", refugiosRoutes);
+app.use("/api/v1/animales", animalesRoutes);
 
 // Middleware para rutas inexistentes
 app.use((_req, res) => {

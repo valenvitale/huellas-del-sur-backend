@@ -1,4 +1,3 @@
-
 # Huellas del Sur — Contratos de API
 
 ## 1. Introducción
