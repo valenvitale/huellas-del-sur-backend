@@ -1,9 +1,28 @@
 import { Router, Request, Response } from "express";
 import { animalesMock } from "../mocks/animales.mock";
-import { Animal } from "../types/Animal";
+import { Animal, AnimalCatalogo } from "../types/Animal";
 import { refugiosMock } from "../mocks/refugios.mock";
 
 const router = Router();
+
+// Incorporar información del refugio asociado
+function obtenerAnimalCatalogo(animal: Animal): AnimalCatalogo {
+    const refugio = refugiosMock.find(
+        (refugio) => refugio.id === animal.refugioId
+    );
+
+    return {
+        ...animal,
+        refugio: refugio
+            ? {
+                id: refugio.id,
+                nombre: refugio.nombre,
+                localidad: refugio.localidad
+            }
+            : null
+    };
+}
+
 type DatosAnimal = Omit<
     Animal,
     "id" | "fechaCreacion" | "fechaActualizacion"
@@ -109,6 +128,7 @@ router.get("/", (req: Request, res: Response) => {
         estado,
         sexo,
         refugioId,
+        localidad,
         page = "1",
         limit = "10",
         sortBy = "nombre",
@@ -122,7 +142,8 @@ router.get("/", (req: Request, res: Response) => {
         (tamanio !== undefined && typeof tamanio !== "string") ||
         (estado !== undefined && typeof estado !== "string") ||
         (sexo !== undefined && typeof sexo !== "string") ||
-        (refugioId !== undefined && typeof refugioId !== "string")
+        (refugioId !== undefined && typeof refugioId !== "string") ||
+        (localidad !== undefined && typeof localidad !== "string")
     ) {
         res.status(400).json({
             msg: "Parámetros de búsqueda inválidos",
@@ -259,9 +280,21 @@ router.get("/", (req: Request, res: Response) => {
         );
     }
 
-    if (refugioId) {
+    // Filtrar por localidad del refugio
+    if (localidad) {
+        const refugiosLocalidad = refugiosMock
+            .filter(
+                (refugio) =>
+                    refugio.localidad.localeCompare(
+                        localidad.trim(),
+                        "es",
+                        { sensitivity: "base" }
+                    ) === 0
+            )
+            .map((refugio) => refugio.id);
+
         animales = animales.filter(
-            (animal) => animal.refugioId === refugioId
+            (animal) => refugiosLocalidad.includes(animal.refugioId)
         );
     }
 
@@ -296,7 +329,9 @@ router.get("/", (req: Request, res: Response) => {
     const total = animales.length;
     const totalPages = Math.ceil(total / limite);
     const inicio = (pagina - 1) * limite;
-    const resultados = animales.slice(inicio, inicio + limite);
+    const resultados = animales
+    .slice(inicio, inicio + limite)
+    .map(obtenerAnimalCatalogo);
 
     // Devolver respuesta
     res.status(200).json({
