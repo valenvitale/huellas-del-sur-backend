@@ -15,6 +15,14 @@ export interface Animal {
   sexo: SexoAnimal;
   tamanio: "pequeno" | "mediano" | "grande";
   descripcion: string;
+  vacunado?: boolean;
+  castrado?: boolean;
+  desparasitado?: boolean;
+  estadoSalud?: string;
+  comportamiento?: string;
+  compatibleConNinos?: boolean;
+  compatibleConPerros?: boolean;
+  compatibleConGatos?: boolean;
   imagenUrl?: string;
   estado: EstadoAnimal;
   fechaCreacion: string;
