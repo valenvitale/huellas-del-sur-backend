@@ -108,6 +108,34 @@ function validarDatosAnimal(
         return "La imagen debe ser una cadena de texto";
     }
 
+    // Validar campos opcionales de salud y compatibilidad
+    const camposBooleanos = {
+        vacunado: datos.vacunado,
+        castrado: datos.castrado,
+        desparasitado: datos.desparasitado,
+        compatibleConNinos: datos.compatibleConNinos,
+        compatibleConPerros: datos.compatibleConPerros,
+        compatibleConGatos: datos.compatibleConGatos
+    };
+
+    for (const [campo, valor] of Object.entries(camposBooleanos)) {
+        if (valor !== undefined && typeof valor !== "boolean") {
+            return `El campo ${campo} debe ser un valor booleano`;
+        }
+    }
+
+    // Validar información de salud y comportamiento
+    const camposTexto = {
+        estadoSalud: datos.estadoSalud,
+        comportamiento: datos.comportamiento
+    };
+
+    for (const [campo, valor] of Object.entries(camposTexto)) {
+        if (valor !== undefined && typeof valor !== "string") {
+            return `El campo ${campo} debe ser una cadena de texto`;
+        }
+    }
+
     // Validar existencia del refugio
     const refugioExiste = refugiosMock.some(
         (refugio) => refugio.id === refugioId
@@ -280,6 +308,13 @@ router.get("/", (req: Request, res: Response) => {
         );
     }
 
+    // Filtrar por refugio asociado
+    if (refugioId) {
+        animales = animales.filter(
+            (animal) => animal.refugioId === refugioId
+        );
+    }
+
     // Filtrar por localidad del refugio
     if (localidad) {
         const refugiosLocalidad = refugiosMock
@@ -370,7 +405,7 @@ router.get("/:id", (req: Request, res: Response) => {
         msg: "Animal obtenido correctamente",
         code: 200,
         data: {
-            animal
+            animal: obtenerAnimalCatalogo(animal)
         }
     });
 });
@@ -411,7 +446,18 @@ router.post("/", (req: Request, res: Response) => {
         sexo: datos.sexo,
         tamanio: datos.tamanio,
         descripcion: datos.descripcion.trim(),
-        estado: datos.estado,
+        // Salud
+        vacunado: datos.vacunado,
+        castrado: datos.castrado,
+        desparasitado: datos.desparasitado,
+        estadoSalud: datos.estadoSalud?.trim(),
+
+        // Comportamiento y compatibilidad
+        comportamiento: datos.comportamiento?.trim(),
+        compatibleConNinos: datos.compatibleConNinos,
+        compatibleConPerros: datos.compatibleConPerros,
+        compatibleConGatos: datos.compatibleConGatos,
+            estado: datos.estado,
         fechaCreacion: fechaActual,
         fechaActualizacion: fechaActual,
         ...(datos.raza !== undefined && {
@@ -429,7 +475,7 @@ router.post("/", (req: Request, res: Response) => {
         msg: "Animal creado correctamente",
         code: 201,
         data: {
-            animal: nuevoAnimal
+            animal: obtenerAnimalCatalogo(nuevoAnimal)
         }
     });
 });
@@ -476,16 +522,28 @@ router.put("/:id", (req: Request, res: Response) => {
         sexo: datos.sexo,
         tamanio: datos.tamanio,
         descripcion: datos.descripcion.trim(),
+
+        // Salud
+        vacunado: datos.vacunado,
+        castrado: datos.castrado,
+        desparasitado: datos.desparasitado,
+        estadoSalud: datos.estadoSalud?.trim(),
+
+        // Comportamiento y compatibilidad
+        comportamiento: datos.comportamiento?.trim(),
+        compatibleConNinos: datos.compatibleConNinos,
+        compatibleConPerros: datos.compatibleConPerros,
+        compatibleConGatos: datos.compatibleConGatos,
+
         imagenUrl: datos.imagenUrl?.trim(),
         estado: datos.estado,
         fechaActualizacion: new Date().toISOString()
     });
-
     res.status(200).json({
         msg: "Animal actualizado correctamente",
         code: 200,
         data: {
-            animal
+            animal: obtenerAnimalCatalogo(animal)
         }
     });
 });
